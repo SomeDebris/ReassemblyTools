@@ -60,5 +60,14 @@ function loadshapes(filename::String)
     loadshapes(JSON.parsefile(filename))
 end
 
+function loadblocks(blocks::Any)
+    block_dict = Dict{Int, Any}()
+    # TODO: Find next steps for loading all blocks into the script
+end
+
+function loadblocks(filename::String)
+    loadblocks(JSON.parsefile(filename))
+end
+
 
 end # module ReassemblyTools
