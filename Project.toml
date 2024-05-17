@@ -1,0 +1,11 @@
+name = "ReassemblyTools"
+uuid = "6417be52-87aa-430d-ab23-97cc5eca93f4"
+authors = ["Magnus Ramsey <38709696+SomeDebris@users.noreply.github.com>"]
+version = "0.1.0"
+
+[deps]
+BenchmarkTools = "6e4b80f9-dd63-53aa-95a3-0cdb28fa8baf"
+ControlSystems = "a6e380b2-a6ca-5380-bf3e-84a91bcd477e"
+JSON = "682c06a0-de6a-54ab-a142-c8b1cf79cde6"
+LinearAlgebra = "37e2e46d-f89d-539d-b4ee-838fcccc9c8e"
+Revise = "295af30f-e4ad-537b-8983-00126c2a3abe"
