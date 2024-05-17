@@ -24,6 +24,8 @@ function loadshapefile(filename::String)
             for idx_vtx in 1:length(scale["verts"])
                 verts[idx_vtx, :] = scale["verts"][idx_vtx]
             end
+
+            display(verts)
         end
 
         shape_dict[shape[1]] = shape[2]
