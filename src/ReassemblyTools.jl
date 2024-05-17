@@ -10,17 +10,23 @@ struct ShipInfo
     I
 end
 
-function getpolygoncentroid(X, Y)
-    X
-end
-
 function getpolygonarea(X, Y)
     area_sum_items = (X .* circshift(Y, 1)) - (Y .* circshift(X, 1))
 
-    sum(area_sum_items) / 2
+    sum(area_sum_items) / 2, area_sum_items
 end
 
-function loadshapes(shapes::Dict)
+function getpolygoncentroid(X, Y)
+    X_Shift = circshift(X, 1)
+    Y_Shift = circshift(Y, 1)
+
+    area, sum_items = getpolygonarea(X, Y)
+
+     (1 / (6 .* area)) .* sum((X + X_Shift) .* sum_items),
+     (1 / (6 .* area)) .* sum((Y + Y_Shift) .* sum_items)
+end
+
+function loadshapes(shapes::Any)
     shape_dict = Dict{String, Any}()
 
     for idx_shape in eachindex(shapes)
