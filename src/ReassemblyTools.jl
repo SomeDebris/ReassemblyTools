@@ -20,9 +20,7 @@ function getpolygonarea(X, Y)
     sum(area_sum_items) / 2
 end
 
-function loadshapefile(filename::String)
-    shapes = JSON.parsefile(filename)
-
+function loadshapes(shapes::Dict)
     shape_dict = Dict{String, Any}()
 
     for idx_shape in eachindex(shapes)
@@ -46,12 +44,14 @@ function loadshapefile(filename::String)
             new_shape[idx_scale] = formatted_scale
         end
 
-        display(new_shape)
-
         shape_dict[shapes[idx_shape][1]] = new_shape
     end
 
     shape_dict
+end
+
+function loadshapes(filename::String)
+    loadshapes(JSON.parsefile(filename))
 end
 
 
