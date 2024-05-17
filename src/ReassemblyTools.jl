@@ -31,7 +31,7 @@ function loadshapefile(filename::String)
         for idx_scale in eachindex(shapes[idx_shape][2])
             scale = shapes[idx_shape][2][idx_scale]
 
-            formatted_scale = Dict{String, AbstractVecOrMat}()
+            formatted_scale = Dict{String, Any}()
             # Creates the array of vertices. as long as the number of vertices 
             # and 2 wide
             verts = Array{Float64,2}(undef, lastindex(scale["verts"]), 2)
