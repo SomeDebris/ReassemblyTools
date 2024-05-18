@@ -227,11 +227,7 @@ function getshipstatespace_fromfiles(ship_filename, blocks_filename, shapes_file
 
     ship_stats = computeshipstats(ship_filename, blocks, shapes)
 
-    out = Vector{ShipStateSpace}(undef, lastindex(ship_stats))
-
-    for i in eachindex(ship_stats)
-        out[i] = getshipstatespace(ship_stats[i], blocks, shapes)
-    end
+    out = getshipstatespace.(ship_stats, blocks, shapes)
 
     return out
 end
