@@ -230,7 +230,11 @@ function getshipstatespace_fromfiles(ship_filename, blocks_filename, shapes_file
 
     out = getshipstatespace.(ship_stats, Ref(blocks), Ref(shapes))
     
-    K = lqr.(out.A, out.B, I, I)
+    K = Vector{Matrix}(undef, lastindex(out))
+
+    for i in eachindex(out)
+        K[i] = lqr(out[i].A, out[i].B, I, I)
+    end
 
     return out, K
 end
