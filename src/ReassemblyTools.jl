@@ -1,6 +1,7 @@
 module ReassemblyTools
 using JSON
 using LinearAlgebra
+using Printf
 
 greet() = print("Hello World!")
 
@@ -163,8 +164,11 @@ function computeshipstats(ship_filename, blocks, shapes)
             ship_J += J_parallel_axis
             ship_mass += mass
 
-            if hasfeature(block, "THRUSTER")
+            if hasfeature(blocks[id], "THRUSTER")
+                @printf "Aw yeah! I got a thruster! Block ID: %d\n" id
                 push!(ship_thrusters, block)
+            else
+                @printf "nope, not a thruster,      Block ID: %d\n" id
             end
         end
 
