@@ -165,10 +165,7 @@ function computeshipstats(ship_filename, blocks, shapes)
             ship_mass += mass
 
             if hasfeature(blocks[id], "THRUSTER")
-                @printf "Aw yeah! I got a thruster! Block ID: %d\n" id
                 push!(ship_thrusters, block)
-            else
-                @printf "nope, not a thruster,      Block ID: %d\n" id
             end
         end
 
