@@ -1,6 +1,7 @@
 module ReassemblyTools
 using JSON
 using LinearAlgebra
+using ControlSystems
 using Printf
 
 greet() = print("Hello World!")
@@ -227,9 +228,11 @@ function getshipstatespace_fromfiles(ship_filename, blocks_filename, shapes_file
 
     ship_stats = computeshipstats(ship_filename, blocks, shapes)
 
-    out = getshipstatespace.(ship_stats, blocks, shapes)
+    out = getshipstatespace.(ship_stats, Ref(blocks), Ref(shapes))
+    
+    K = lqr.(out.A, out.B, I, I)
 
-    return out
+    return out, K
 end
         
 
