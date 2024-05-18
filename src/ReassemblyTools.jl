@@ -128,7 +128,7 @@ function computeshipstats(ship_filename, blocks, shapes)
 
             θ = haskey(block, "angle") ? block["angle"] : 0
             
-            ship_mass += blocks[id]["density"] * shapes[blocks[id]["shape"]]
+            ship_mass += blocks[id]["density"] * shapes[blocks[id]["shape"]]["area"]
         end
 
         push!(output_params, ShipInfo(ship_mass, ship_centroid, ship_J, 0))
