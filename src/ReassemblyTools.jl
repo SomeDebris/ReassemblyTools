@@ -46,6 +46,7 @@ function loadshapes(shapes::Any)
 
             formatted_scale["verts"] = verts
             formatted_scale["area"] = getpolygonarea(verts[:,1], verts[:,2])
+            formatted_scale["centroid"] = getpolygoncentroid(verts[:,1], verts[:,2])
 
             new_shape[idx_scale] = formatted_scale
         end
@@ -60,13 +61,18 @@ function loadshapes(filename::String)
     loadshapes(JSON.parsefile(filename))
 end
 
-function loadblocks(blocks::Any)
+function makeblocksdict(blocks::Any)
     block_dict = Dict{Int, Any}()
     # TODO: Find next steps for loading all blocks into the script
+    for i in eachindex(blocks)
+        block_dict[blocks[i]["ident"]] = blocks[i]
+    end
+
+    block_dict
 end
 
-function loadblocks(filename::String)
-    loadblocks(JSON.parsefile(filename))
+function makeblocksdict(filename::String)
+    makeblocksdict(JSON.parsefile(filename))
 end
 
 
