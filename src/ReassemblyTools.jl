@@ -92,6 +92,10 @@ function makeblocksdict(filename::String)
     makeblocksdict(JSON.parsefile(filename))
 end
 
+function getkeydefaulted(dict, key, default)
+    return haskey(dict, key) ? dict[key] : default
+end
+
 function computeshipstats(ship_filename, blocks, shapes)
     ship_dict = JSON.parsefile(ship_filename)
 
@@ -129,6 +133,7 @@ function computeshipstats(ship_filename, blocks, shapes)
 
             shape = haskey(blocks[id], "shape") ? blocks[id]["shape"] : "SQUARE"
             scale = haskey(blocks[id], "scale") ? blocks[id]["scale"] : 1
+            density = haskey(blocks[id], "density") ? blocks[id]["density"] : 1
 
             ship_mass += blocks[id]["density"] * shapes[shape][scale]["area"]
         end
