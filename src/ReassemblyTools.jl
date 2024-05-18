@@ -36,7 +36,7 @@ function getpolygon_secondpolarareamoment(X, Y)
     J_x = (1/12) .* sum((sum_items) .* (Y.^2 + Y .* Y_Shift + Y_Shift.^2))
     J_y = (1/12) .* sum((sum_items) .* (X.^2 + X .* X_Shift + X_Shift.^2))
     
-    J_x + J_y, J_x, J_y
+    J_x, J_y, J_x + J_y
 end
 
 function loadshapes(shapes::Any)
@@ -62,9 +62,7 @@ function loadshapes(shapes::Any)
             formatted_scale["verts"] = verts
             formatted_scale["area"] = getpolygonarea(verts[:,1], verts[:,2])[1]
             formatted_scale["centroid"] = getpolygoncentroid(verts[:,1], verts[:,2])
-            formatted_scale["J_z"] = second_polar_moment_of_area[1]
-            formatted_scale["J_x"] = second_polar_moment_of_area[2]
-            formatted_scale["J_y"] = second_polar_moment_of_area[3]
+            formatted_scale["J"] = second_polar_moment_of_area
 
             new_shape[idx_scale] = formatted_scale
         end
