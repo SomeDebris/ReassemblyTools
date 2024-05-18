@@ -127,8 +127,8 @@ function computeshipstats(ship_filename, blocks, shapes)
             offset = Tuple{Float64, Float64}(block["offset"])
             θ = haskey(block, "angle") ? block["angle"] : 0
 
-            shape = blocks[id]["shape"]
-            scale = blocks[id]["scale"]
+            shape = haskey(blocks[id], "shape") ? blocks[id]["shape"] : "SQUARE"
+            scale = haskey(blocks[id], "scale") ? blocks[id]["scale"] : 1
 
             ship_mass += blocks[id]["density"] * shapes[shape][scale]["area"]
         end
