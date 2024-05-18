@@ -45,7 +45,7 @@ function loadshapes(shapes::Any)
             end
 
             formatted_scale["verts"] = verts
-            formatted_scale["area"] = getpolygonarea(verts[:,1], verts[:,2])
+            formatted_scale["area"] = getpolygonarea(verts[:,1], verts[:,2])[1]
             formatted_scale["centroid"] = getpolygoncentroid(verts[:,1], verts[:,2])
 
             new_shape[idx_scale] = formatted_scale
