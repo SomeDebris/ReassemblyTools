@@ -11,6 +11,10 @@ struct ShipInfo
     thrusters
 end
 
+function getkeydefaulted(dict, key, default)
+    return haskey(dict, key) ? dict[key] : default
+end
+
 function getpolygonarea(X, Y)
     area_sum_items = (X .* circshift(Y, 1)) - (Y .* circshift(X, 1))
 
@@ -92,10 +96,6 @@ function makeblocksdict(filename::String)
     makeblocksdict(JSON.parsefile(filename))
 end
 
-function getkeydefaulted(dict, key, default)
-    return haskey(dict, key) ? dict[key] : default
-end
-
 function computeshipstats(ship_filename, blocks, shapes)
     ship_dict = JSON.parsefile(ship_filename)
 
@@ -131,9 +131,9 @@ function computeshipstats(ship_filename, blocks, shapes)
             offset = Tuple{Float64, Float64}(block["offset"])
             θ = haskey(block, "angle") ? block["angle"] : 0
 
-            shape = haskey(blocks[id], "shape") ? blocks[id]["shape"] : "SQUARE"
-            scale = haskey(blocks[id], "scale") ? blocks[id]["scale"] : 1
-            density = haskey(blocks[id], "density") ? blocks[id]["density"] : 1
+            shape = getkeydefaulted(blocks[id], "shape", "SQUARE")
+            scale = getkeydefaulted(blocks[id], "scale", 1)
+            density = getkeydefaulted(blocks[id], "density", 1)
 
             ship_mass += blocks[id]["density"] * shapes[shape][scale]["area"]
         end
