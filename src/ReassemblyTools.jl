@@ -232,6 +232,8 @@ function getshipstatespace_fromfiles(ship_filename, blocks_filename, shapes_file
     for i in eachindex(ship_stats)
         out[i] = getshipstatespace(ship_stats[i], blocks, shapes)
     end
+
+    return out
 end
         
 
