@@ -128,6 +128,12 @@ function computeshipstats(ship_filename, blocks, shapes)
 
         for block in ships[idx_ship]["blocks"]
             id = block["ident"]
+
+            # Sometimes, blocks won't be in the struct. skip these
+            if !haskey(blocks, id)
+                continue
+            end
+
             offset = Tuple{Float64, Float64}(block["offset"])
             θ = haskey(block, "angle") ? block["angle"] : 0
 
@@ -140,7 +146,7 @@ function computeshipstats(ship_filename, blocks, shapes)
             ship_mass += density * area
         end
 
-        push!(output_params, ShipInfo(ship_mass, ship_centroid, ship_J, 0))
+        output_params[idx_ship] = ShipInfo(ship_mass, ship_centroid, ship_J, 0)
     end
 
     return output_params
