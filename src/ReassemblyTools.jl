@@ -19,6 +19,13 @@ struct ShipStateSpace
     D
 end
 
+struct Thruster
+    max_thrust::Float64
+    min_thrust::Float64
+    offset::Tuple{Float64, Float64}
+    angle::Float64
+end
+
 function getkeydefaulted(dict, key, default)
     return haskey(dict, key) ? dict[key] : default
 end
@@ -250,14 +257,17 @@ function simulate_ship_ss(ship::ShipStateSpace, target, range, deltat)
 
     state = copy(target)
     states = Matrix{Float64}(undef, lastindex(target), lastindex(range))
+    thruster_states = Matrix{Float64}(undef, size(K,1), lastindex(range))
 
     for i in range
-        state += deltat .* (ship.A * state + ship.B * K * state)
+        state += deltat .* (ship.A * state - ship.B * clamp.(K * state, 0, 1))
+        
+        thruster_states[:,i] = clamp.(K * state, 0, 1)
 
         states[:,i] = state
     end
     
-    return states
+    return states, thruster_states
 end
 
         
