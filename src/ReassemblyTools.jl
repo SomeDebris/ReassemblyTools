@@ -62,7 +62,7 @@ function loadshapes(filename::String)
 end
 
 function makeblocksdict(blocks::Any)
-    block_dict = Dict{Int, Any}()
+    block_dict = Dict{Int, Dict{String, Any}}()
     # TODO: Find next steps for loading all blocks into the script
     for i in eachindex(blocks)
         block_dict[blocks[i]["ident"]] = blocks[i]
