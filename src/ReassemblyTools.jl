@@ -26,6 +26,19 @@ function getpolygoncentroid(X, Y)
      (1 / (6 .* area)) .* sum((Y + Y_Shift) .* sum_items)
 end
 
+# https://physics.stackexchange.com/questions/493736/moment-of-inertia-for-an-arbitrary-polygon 
+function getpolygon_secondpolarareamoment(X, Y)
+    X_Shift = circshift(X, 1)
+    Y_Shift = circshift(Y, 1)
+
+    area, sum_items = getpolygonarea(X, Y)
+
+    J_x = (1/12) .* (sum_items) .* (Y.^ + Y .* Y_Shift + Y_Shift.^2)
+    J_y = (1/12) .* (sum_items) .* (X.^ + X .* X_Shift + X_Shift.^2)
+    
+    J_x + J_y, J_x, J_y
+end
+
 function loadshapes(shapes::Any)
     shape_dict = Dict{String, Any}()
 
