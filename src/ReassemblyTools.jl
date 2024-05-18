@@ -221,5 +221,19 @@ function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
     return ShipStateSpace(A, B, 0, 0)
 end
 
+function getshipstatespace_fromfiles(ship_filename, blocks_filename, shapes_filename)
+    blocks = makeblocksdict(blocks_filename)
+    shapes = loadshapes(shapes_filename)
+
+    ship_stats = computeshipstats(ship_filename, blocks, shapes)
+
+    out = Vector{ShipStateSpace}(undef, lastindex(ship_stats))
+
+    for i in eachindex(ship_stats)
+        out[i] = getshipstatespace(ship_stats[i], blocks, shapes)
+    end
+end
+        
+
 
 end # module ReassemblyTools
