@@ -33,8 +33,8 @@ function getpolygon_secondpolarareamoment(X, Y)
 
     area, sum_items = getpolygonarea(X, Y)
 
-    J_x = (1/12) .* sum((sum_items) .* (Y.^ + Y .* Y_Shift + Y_Shift.^2))
-    J_y = (1/12) .* sum((sum_items) .* (X.^ + X .* X_Shift + X_Shift.^2))
+    J_x = (1/12) .* sum((sum_items) .* (Y.^2 + Y .* Y_Shift + Y_Shift.^2))
+    J_y = (1/12) .* sum((sum_items) .* (X.^2 + X .* X_Shift + X_Shift.^2))
     
     J_x + J_y, J_x, J_y
 end
