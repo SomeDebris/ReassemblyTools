@@ -8,7 +8,7 @@ greet() = print("Hello World!")
 
 struct ShipInfo
     mass::Float64
-    J::Tuple{Float64, Float64, Float64}
+    J::Float64
     thrusters::Vector{Dict{String, Any}}
 end
 
@@ -244,6 +244,22 @@ function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks_filen
 
     return getshipstatespace_fromfiles(ship_filename, blocks, shapes)
 end
+
+function simulate_ship_ss(ship::ShipStateSpace, target, range, deltat)
+    K = lqr(ship.A, ship.B, I, I)
+
+    state = copy(target)
+    states = Matrix{Float64}(undef, lastindex(target), lastindex(range))
+
+    for i in range
+        state += deltat .* (ship.A * state + ship.B * K * state)
+
+        states[:,i] = state
+    end
+    
+    return states
+end
+
         
 
 
