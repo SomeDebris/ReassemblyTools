@@ -222,7 +222,7 @@ function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
     return ShipStateSpace(A, B, 0, 0)
 end
 
-function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks::AbstractArray, shapes::AbstractArray)
+function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks::AbstractDict, shapes::AbstractDict)
     ship_stats = computeshipstats(ship_filename, blocks, shapes)
 
     out = getshipstatespace.(ship_stats, Ref(blocks), Ref(shapes))
