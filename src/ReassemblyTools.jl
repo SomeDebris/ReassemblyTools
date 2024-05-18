@@ -57,9 +57,14 @@ function loadshapes(shapes::Any)
                 verts[idx_vtx, :] = scale["verts"][idx_vtx]
             end
 
+            second_polar_moment_of_area = getpolygon_secondpolarareamoment(verts[:,1], verts[:,2])
+
             formatted_scale["verts"] = verts
             formatted_scale["area"] = getpolygonarea(verts[:,1], verts[:,2])[1]
             formatted_scale["centroid"] = getpolygoncentroid(verts[:,1], verts[:,2])
+            formatted_scale["J_z"] = second_polar_moment_of_area[1]
+            formatted_scale["J_x"] = second_polar_moment_of_area[2]
+            formatted_scale["J_y"] = second_polar_moment_of_area[3]
 
             new_shape[idx_scale] = formatted_scale
         end
