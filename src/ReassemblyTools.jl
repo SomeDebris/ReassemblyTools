@@ -95,6 +95,20 @@ function makeblocksdict(filename::String)
     makeblocksdict(JSON.parsefile(filename))
 end
 
+function hasfeature(block, feature)
+    if !haskey(block, "features")
+        return false
+    end
+    
+    features = block["features"]
+    
+    if isa(features, AbstractString)
+        return feature == features
+    else
+        return feature in features
+    end
+end
+
 function computeshipstats(ship_filename, blocks, shapes)
     ship_dict = JSON.parsefile(ship_filename)
 
@@ -122,7 +136,7 @@ function computeshipstats(ship_filename, blocks, shapes)
         ship_mass = 0
         ship_J = 0
 
-        ship_thrusters = Vector{Dict{String, Any}}(undef, 1)
+        ship_thrusters = Vector{Dict{String, Any}}()
 
         for block in ships[idx_ship]["blocks"]
             id = block["ident"]
@@ -144,7 +158,7 @@ function computeshipstats(ship_filename, blocks, shapes)
             area = shapes[shape][scale]["area"]
 
             mass = density * area
-            J_parallel_axis = mass * sum(offset^2) + J
+            J_parallel_axis = mass * sum(offset .* offset) + J
             
             ship_J += J_parallel_axis
             ship_mass += mass
