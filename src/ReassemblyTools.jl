@@ -214,6 +214,8 @@ function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
 
         B[3,i] = (1/m) * x_component * thruster_force
         B[4,i] = (1/m) * y_component * thruster_force
+
+        B[6,i] = (1/J) * sum((thruster_force .* (x_component, y_component)) .* offset)
     end
 
     return ShipStateSpace(A, B, 0, 0)
