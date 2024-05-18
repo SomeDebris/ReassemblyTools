@@ -162,9 +162,13 @@ function computeshipstats(ship_filename, blocks, shapes)
             
             ship_J += J_parallel_axis
             ship_mass += mass
+
+            if hasfeature(block, "THRUSTER")
+                push!(ship_thrusters, block)
+            end
         end
 
-        output_params[idx_ship] = ShipInfo(ship_mass, ship_J, 0)
+        output_params[idx_ship] = ShipInfo(ship_mass, ship_J, ship_thrusters)
     end
 
     return output_params
