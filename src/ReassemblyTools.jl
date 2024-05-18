@@ -135,7 +135,9 @@ function computeshipstats(ship_filename, blocks, shapes)
             scale = getkeydefaulted(blocks[id], "scale", 1)
             density = getkeydefaulted(blocks[id], "density", 1)
 
-            ship_mass += blocks[id]["density"] * shapes[shape][scale]["area"]
+            area = shapes[shape][scale]["area"]
+
+            ship_mass += density * area
         end
 
         push!(output_params, ShipInfo(ship_mass, ship_centroid, ship_J, 0))
