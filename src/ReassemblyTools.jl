@@ -11,6 +11,13 @@ struct ShipInfo
     thrusters
 end
 
+struct ShipStateSpace
+    A
+    B
+    C
+    D
+end
+
 function getkeydefaulted(dict, key, default)
     return haskey(dict, key) ? dict[key] : default
 end
@@ -147,9 +154,8 @@ function computeshipstats(ship_filename, blocks, shapes)
                 continue
             end
 
-            offset = Tuple{Float64, Float64}(block["offset"])
+            offset = Tuple{Float64,Float64}(getkeydefaulted(block, "offset", (0,0)))
 
-            θ = getkeydefaulted(block, "angle", 0)
 
             shape = getkeydefaulted(blocks[id], "shape", "SQUARE")
             scale = getkeydefaulted(blocks[id], "scale", 1)
@@ -173,6 +179,44 @@ function computeshipstats(ship_filename, blocks, shapes)
     end
 
     return output_params
+end
+
+function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
+    # state matrix of an arbitrary ship
+    
+    m = ship_stats.mass
+    J = ship_stats.J
+
+    A = [0 0 1 0 0 0
+         0 0 0 1 0 0
+         0 0 0 0 0 0
+         0 0 0 0 0 0
+         0 0 0 0 0 1
+         0 0 0 0 0 0]
+
+    thruster_count = lastindex(ship_stats.thrusters)
+
+    B = Matrix{Float64}(undef, 6, thruster_count)
+
+    for i in eachindex(ship_stats.thrusters)
+        block = ship_stats.thrusters[i]
+        id = block["ident"]
+
+        block_def = blocks[id]
+
+        θ = getkeydefaulted(block, "angle", 0)
+        offset = Tuple{Float64,Float64}(getkeydefaulted(block, "offset", (0,0)))
+
+        thruster_force = getkeydefaulted(block_def, "thrusterForce", 10000)
+
+        x_component = cos(θ)
+        y_component = sin(θ)
+
+        B[3,i] = (1/m) * x_component * thruster_force
+        B[4,i] = (1/m) * y_component * thruster_force
+    end
+
+    return A, B
 end
 
 
