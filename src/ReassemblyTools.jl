@@ -91,5 +91,27 @@ function makeblocksdict(filename::String)
     makeblocksdict(JSON.parsefile(filename))
 end
 
+function computeshipstats(ship_filename)
+    ship_dict = JSON.parsefile(ship_filename)
+
+    is_fleet = !haskey(ship_dict, "data") 
+
+    ship_count = 1
+
+    if !is_fleet
+        ship_count = length(ship_dict["blueprints"])
+    end
+
+    ships = Vector{Dict{String, Any}}(undef, ship_count)
+
+    if is_fleet
+        ships[:] = ship_dict[:]
+    else
+        ships[1] = ship_dict
+    end
+    
+    # TODO: compute ship parameters etc.
+end
+
 
 end # module ReassemblyTools
