@@ -6,7 +6,6 @@ greet() = print("Hello World!")
 
 struct ShipInfo
     mass
-    centroid
     J
     thrusters
 end
@@ -122,7 +121,6 @@ function computeshipstats(ship_filename, blocks, shapes)
     for idx_ship in eachindex(ships)
         ship_mass = 0
         ship_J = 0
-        ship_centroid = [0,0]
 
         ship_thrusters = Vector{Dict{String, Any}}(undef, 1)
 
@@ -135,7 +133,8 @@ function computeshipstats(ship_filename, blocks, shapes)
             end
 
             offset = Tuple{Float64, Float64}(block["offset"])
-            θ = haskey(block, "angle") ? block["angle"] : 0
+
+            θ = getkeydefaulted(block, "angle", 0)
 
             shape = getkeydefaulted(blocks[id], "shape", "SQUARE")
             scale = getkeydefaulted(blocks[id], "scale", 1)
@@ -144,9 +143,10 @@ function computeshipstats(ship_filename, blocks, shapes)
             area = shapes[shape][scale]["area"]
 
             ship_mass += density * area
+
         end
 
-        output_params[idx_ship] = ShipInfo(ship_mass, ship_centroid, ship_J, 0)
+        output_params[idx_ship] = ShipInfo(ship_mass, ship_J, 0)
     end
 
     return output_params
