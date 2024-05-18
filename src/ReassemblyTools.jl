@@ -225,11 +225,13 @@ end
 function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks::AbstractDict, shapes::AbstractDict)
     ship_stats = computeshipstats(ship_filename, blocks, shapes)
 
-    out = getshipstatespace.(ship_stats, Ref(blocks), Ref(shapes))
-    
-    K = Vector{Matrix{Float64}}(undef, lastindex(out))
+    # out = getshipstatespace.(ship_stats, Ref(blocks), Ref(shapes))
 
-    for i in eachindex(out)
+    K = Vector{Matrix{Float64}}(undef, lastindex(ship_stats))
+    out = Vector{ShipStateSpace}(undef, lastindex(ship_stats))
+
+    for i in eachindex(ship_stats)
+        out[i] = getshipstatespace(ship_stats[i], blocks, shapes)
         K[i] = lqr(out[i].A, out[i].B, I, I)
     end
 
