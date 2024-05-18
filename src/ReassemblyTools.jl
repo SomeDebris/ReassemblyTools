@@ -99,7 +99,7 @@ function computeshipstats(ship_filename, blocks, shapes)
 
     ship_count = 1
 
-    if !is_fleet
+    if is_fleet
         ship_count = length(ship_dict["blueprints"])
     end
 
@@ -125,10 +125,12 @@ function computeshipstats(ship_filename, blocks, shapes)
         for block in ships[idx_ship]["blocks"]
             id = block["ident"]
             offset = Tuple{Float64, Float64}(block["offset"])
-
             θ = haskey(block, "angle") ? block["angle"] : 0
-            
-            ship_mass += blocks[id]["density"] * shapes[blocks[id]["shape"]]["area"]
+
+            shape = blocks[id]["shape"]
+            scale = blocks[id]["scale"]
+
+            ship_mass += blocks[id]["density"] * shapes[shape][scale]["area"]
         end
 
         push!(output_params, ShipInfo(ship_mass, ship_centroid, ship_J, 0))
