@@ -7,14 +7,14 @@ using Printf
 greet() = print("Hello World!")
 
 struct ShipInfo
-    mass
-    J
-    thrusters
+    mass::Float64
+    J::Tuple{Float64, Float64, Float64}
+    thrusters::Vector{Dict{String, Any}}
 end
 
 struct ShipStateSpace
-    A
-    B
+    A::Matrix{Float64}
+    B::Matrix{Float64}
     C
     D
 end
