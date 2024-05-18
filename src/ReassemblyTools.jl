@@ -89,7 +89,7 @@ function loadshapes(filename::String)
     loadshapes(JSON.parsefile(filename))
 end
 
-function makeblocksdict(blocks::Any)
+function makeblocksdict(blocks::AbstractArray)
     block_dict = Dict{Int, Dict{String, Any}}()
     # TODO: Find next steps for loading all blocks into the script
     for i in eachindex(blocks)
