@@ -7,7 +7,8 @@ greet() = print("Hello World!")
 struct ShipInfo
     mass
     centroid
-    I
+    J
+    thrusters
 end
 
 function getpolygonarea(X, Y)
@@ -91,7 +92,7 @@ function makeblocksdict(filename::String)
     makeblocksdict(JSON.parsefile(filename))
 end
 
-function computeshipstats(ship_filename)
+function computeshipstats(ship_filename, blocks, shapes)
     ship_dict = JSON.parsefile(ship_filename)
 
     is_fleet = !haskey(ship_dict, "data") 
@@ -105,12 +106,35 @@ function computeshipstats(ship_filename)
     ships = Vector{Dict{String, Any}}(undef, ship_count)
 
     if is_fleet
-        ships[:] = ship_dict[:]
+        ships[:] = ship_dict["blueprints"][:]
     else
         ships[1] = ship_dict
     end
     
     # TODO: compute ship parameters etc.
+    #
+    output_params = Vector{ShipInfo}(undef, ship_count)
+
+    for idx_ship in eachindex(ships)
+        ship_mass = 0
+        ship_J = 0
+        ship_centroid = [0,0]
+
+        ship_thrusters = Vector{Dict{String, Any}}(undef, 1)
+
+        for block in ships[idx_ship]["blocks"]
+            id = block["ident"]
+            offset = Tuple{Float64, Float64}(block["offset"])
+
+            θ = haskey(block, "angle") ? block["angle"] : 0
+            
+            ship_mass += blocks[id]["density"] * shapes[blocks[id]["shape"]]
+        end
+
+        push!(output_params, ShipInfo(ship_mass, ship_centroid, ship_J, 0))
+    end
+
+    return output_params
 end
 
 
