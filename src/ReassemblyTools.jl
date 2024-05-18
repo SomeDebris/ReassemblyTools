@@ -196,7 +196,7 @@ function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
 
     thruster_count = lastindex(ship_stats.thrusters)
 
-    B = Matrix{Float64}(undef, 6, thruster_count)
+    B = zeros(6, thruster_count)
 
     for i in eachindex(ship_stats.thrusters)
         block = ship_stats.thrusters[i]
@@ -216,7 +216,7 @@ function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
         B[4,i] = (1/m) * y_component * thruster_force
     end
 
-    return A, B
+    return ShipStateSpace(A, B, 0, 0)
 end
 
 
