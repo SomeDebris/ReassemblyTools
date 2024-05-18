@@ -139,11 +139,15 @@ function computeshipstats(ship_filename, blocks, shapes)
             shape = getkeydefaulted(blocks[id], "shape", "SQUARE")
             scale = getkeydefaulted(blocks[id], "scale", 1)
             density = getkeydefaulted(blocks[id], "density", 1)
+            J = shapes[shape][scale]["J"][3]
 
             area = shapes[shape][scale]["area"]
 
-            ship_mass += density * area
-
+            mass = density * area
+            J_parallel_axis = mass * sum(offset^2) + J
+            
+            ship_J += J_parallel_axis
+            ship_mass += mass
         end
 
         output_params[idx_ship] = ShipInfo(ship_mass, ship_J, 0)
