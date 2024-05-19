@@ -272,7 +272,7 @@ function simulate_ship_lqr_gainscheduled_rotation(ship::Vector{ShipStateSpace}, 
     K_options = Vector{Matrix{Float64}}(undef, count_mapped_rotations)
 
     for i in eachindex(ship)
-        K_options[i] = lqr(ship[i].A, ship[i].B, Q, 2*I)
+        K_options[i] = lqr(ship[i].A, ship[i].B, 2*I, 2*I)
     end
 
     state = copy(target)
@@ -280,7 +280,7 @@ function simulate_ship_lqr_gainscheduled_rotation(ship::Vector{ShipStateSpace}, 
     thruster_states = Matrix{Float64}(undef, thruster_count, lastindex(range))
 
     for i in range
-        θ = state[5]
+        θ = mod(state[5], 2*π)
         
         idx_selected_model = argmin(abs.(angles .- θ))
 
@@ -300,7 +300,7 @@ end
 function simulate_ship_lqr(ship::ShipStateSpace, target, range, deltat)
     thruster_count = size(ship.B, 2)
 
-    Q = Diagonal([4, 4, 10, 10, 4, 10])
+    Q = Diagonal([4, 4, 10, 10, 12, 10])
     
     K = lqr(ship.A, ship.B, Q, 2*I)
 
