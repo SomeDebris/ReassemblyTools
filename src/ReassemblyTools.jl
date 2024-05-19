@@ -256,7 +256,7 @@ end
 function simulate_ship_lqr(ship::ShipStateSpace, target, range, deltat)
     thruster_count = size(ship.B, 2)
 
-    Q = Diagonal([4, 4, 10, 10, 0.001, 0.001])
+    Q = Diagonal([4, 4, 10, 10, 4, 10])
     
     K = lqr(ship.A, ship.B, Q, 2*I)
 
