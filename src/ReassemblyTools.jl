@@ -260,6 +260,39 @@ function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks_filen
     return getshipstatespace_fromfiles(ship_filename, blocks, shapes)
 end
 
+function simulate_ship_lqr_gainscheduled_rotation(ship::Vector{ShipStateSpace}, target, range, deltat)
+    thruster_count = size(ship[1].B, 2)
+
+    count_mapped_rotations = lastindex(ship)
+
+    angles = LinRange{Float64}(0, 2*π, count_mapped_rotations + 1)[1:(end-1)]
+
+    Q = Diagonal([4, 4, 10, 10, 4, 10])
+    
+    K_options = Vector{Matrix{Float64}}(undef, count_mapped_rotations)
+
+    for i in eachindex(ship)
+        K_options[i] = lqr(ship[i].A, ship[i].B, Q, 2*I)
+    end
+
+    state = copy(target)
+    states = Matrix{Float64}(undef, lastindex(target), lastindex(range))
+    thruster_states = Matrix{Float64}(undef, size(K,1), lastindex(range))
+
+    for i in range
+        θ = state[5]
+        
+        K = K_options[argmin(abs.(angles .- θ))]
+
+        state += deltat .* (ship.A * state - ship.B * clamp.(K * state, 0, 1))
+        
+        thruster_states[:,i] = clamp.(K * state, 0, 1)
+
+        states[:,i] = state
+    end
+    
+    return states, thruster_states
+end
 
 function simulate_ship_lqr(ship::ShipStateSpace, target, range, deltat)
     thruster_count = size(ship.B, 2)
