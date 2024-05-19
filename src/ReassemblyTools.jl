@@ -277,7 +277,7 @@ function simulate_ship_lqr_gainscheduled_rotation(ship::Vector{ShipStateSpace}, 
 
     state = copy(target)
     states = Matrix{Float64}(undef, lastindex(target), lastindex(range))
-    thruster_states = Matrix{Float64}(undef, size(K,1), lastindex(range))
+    thruster_states = Matrix{Float64}(undef, thruster_count, lastindex(range))
 
     for i in range
         θ = state[5]
