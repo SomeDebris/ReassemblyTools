@@ -231,20 +231,26 @@ function getshipstatespace(ship_stats::ShipInfo, blocks::Dict{Int, AbstractDict}
     return ShipStateSpace(A, B, Diagonal(ones(6)), 0)
 end
 
+function getshipgainscheduled(ship_stats::ShipInfo, blocks::Dict{Int, AbstractDict}, angles::Int = 8)
+    ship_state_spaces = getshipstatespace.(Ref(ship_stats), Ref(blocks), LinRange{Float64}(0, 2*π, angles + 1)[1:(end-1)])
+
+    return ship_state_spaces
+end
+
 function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks::AbstractDict, shapes::AbstractDict)
     ship_stats = computeshipstats(ship_filename, blocks, shapes)
 
     # out = getshipstatespace.(ship_stats, Ref(blocks), Ref(shapes))
 
-    K = Vector{Matrix{Float64}}(undef, lastindex(ship_stats))
+    # K = Vector{Matrix{Float64}}(undef, lastindex(ship_stats))
     out = Vector{ShipStateSpace}(undef, lastindex(ship_stats))
 
     for i in eachindex(ship_stats)
         out[i] = getshipstatespace(ship_stats[i], blocks, shapes)
-        K[i] = lqr(out[i].A, out[i].B, I, I)
+        # K[i] = lqr(out[i].A, out[i].B, I, I)
     end
 
-    return out, K
+    return out #, K
 end
 
 function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks_filename::AbstractString, shapes_filename::AbstractString)
@@ -253,6 +259,7 @@ function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks_filen
 
     return getshipstatespace_fromfiles(ship_filename, blocks, shapes)
 end
+
 
 function simulate_ship_lqr(ship::ShipStateSpace, target, range, deltat)
     thruster_count = size(ship.B, 2)
@@ -276,7 +283,7 @@ function simulate_ship_lqr(ship::ShipStateSpace, target, range, deltat)
     return states, thruster_states
 end
 
-function plot_performance(ship::ShipStateSpace, target, range, deltat)
+function plot_performance_lqr(ship::ShipStateSpace, target, range, deltat)
     plotrange = range .* deltat
 
     states, thrusts = simulate_ship_lqr(ship, target, range, deltat)
