@@ -213,7 +213,8 @@ function getshipstatespace(ship_stats::ShipInfo, blocks::Dict{Int, AbstractDict}
 
         block_def = blocks[id]
 
-        θ = getkeydefaulted(block, "angle", 0)
+        θ = getkeydefaulted(block, "angle", 0) + angle_offset
+
         offset = Tuple{Float64,Float64}(getkeydefaulted(block, "offset", (0,0)))
 
         thruster_force = getkeydefaulted(block_def, "thrusterForce", 10000)
@@ -227,7 +228,7 @@ function getshipstatespace(ship_stats::ShipInfo, blocks::Dict{Int, AbstractDict}
         B[6,i] = (1/J) * sum((thruster_force .* (y_component, x_component)) .* offset)
     end
 
-    return ShipStateSpace(A, B, 0, 0)
+    return ShipStateSpace(A, B, Diagonal(ones(6)), 0)
 end
 
 function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks::AbstractDict, shapes::AbstractDict)
