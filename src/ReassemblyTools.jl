@@ -190,7 +190,7 @@ function computeshipstats(ship_filename, blocks, shapes)
     return output_params
 end
 
-function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
+function getshipstatespace(ship_stats::ShipInfo, blocks::Dict{Int, AbstractDict}, angle_offset::Float64 = 0)
     # state matrix of an arbitrary ship
     
     m = ship_stats.mass
