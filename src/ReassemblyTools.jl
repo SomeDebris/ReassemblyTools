@@ -3,6 +3,7 @@ using JSON
 using LinearAlgebra
 using ControlSystems
 using Printf
+using Plots
 
 greet() = print("Hello World!")
 
@@ -252,10 +253,12 @@ function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks_filen
     return getshipstatespace_fromfiles(ship_filename, blocks, shapes)
 end
 
-function simulate_ship_ss(ship::ShipStateSpace, target, range, deltat)
+function simulate_ship_lqr(ship::ShipStateSpace, target, range, deltat)
     thruster_count = size(ship.B, 2)
+
+    Q = Diagonal([4, 4, 10, 10, 0.001, 0.001])
     
-    K = lqr(ship.A, ship.B, 3*I, I)
+    K = lqr(ship.A, ship.B, Q, 2*I)
 
     state = copy(target)
     states = Matrix{Float64}(undef, lastindex(target), lastindex(range))
@@ -272,6 +275,13 @@ function simulate_ship_ss(ship::ShipStateSpace, target, range, deltat)
     return states, thruster_states
 end
 
+function plot_performance(ship::ShipStateSpace, target, range, deltat)
+    plotrange = range .* deltat
+
+    states, thrusts = simulate_ship_lqr(ship, target, range, deltat)
+
+    Plots.plot(plotrange, states')
+end
         
 
 
