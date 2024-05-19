@@ -326,6 +326,14 @@ function plot_performance_lqr(ship::ShipStateSpace, target, range, deltat)
 
     Plots.plot(plotrange, states')
 end
+
+function plot_performance_lqr_gainscheduled_rotation(ship::Vector{ShipStateSpace}, target, range, deltat)
+    plotrange = range .* deltat
+
+    states, thrusts = simulate_ship_lqr_gainscheduled_rotation(ship, target, range, deltat)
+
+    Plots.plot(plotrange, states')
+end
         
 
 
