@@ -231,7 +231,7 @@ function getshipstatespace(ship_stats::ShipInfo, blocks::AbstractDict, angle_off
     return ShipStateSpace(A, B, Diagonal(ones(6)), 0)
 end
 
-function getshipgainscheduled(ship_stats::ShipInfo, blocks, angles = 8)
+function getshipgainscheduled_rotation(ship_stats::ShipInfo, blocks, angles = 8)
     ship_state_spaces = getshipstatespace.(Ref(ship_stats), Ref(blocks), LinRange{Float64}(0, 2*π, angles + 1)[1:(end-1)])
 
     return ship_state_spaces
