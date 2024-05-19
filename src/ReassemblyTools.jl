@@ -282,9 +282,12 @@ function simulate_ship_lqr_gainscheduled_rotation(ship::Vector{ShipStateSpace}, 
     for i in range
         θ = state[5]
         
-        K = K_options[argmin(abs.(angles .- θ))]
+        idx_selected_model = argmin(abs.(angles .- θ))
 
-        state += deltat .* (ship.A * state - ship.B * clamp.(K * state, 0, 1))
+        selected_model = ship[idx_selected_model]
+        K = K_options[idx_selected_model]
+
+        state += deltat .* (selected_model.A * state - selected_model.B * clamp.(K * state, 0, 1))
         
         thruster_states[:,i] = clamp.(K * state, 0, 1)
 
