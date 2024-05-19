@@ -267,12 +267,12 @@ function simulate_ship_lqr_gainscheduled_rotation(ship::Vector{ShipStateSpace}, 
 
     angles = LinRange{Float64}(0, 2*π, count_mapped_rotations + 1)[1:(end-1)]
 
-    Q = Diagonal([4, 4, 10, 10, 4, 10])
+    Q = Diagonal([1, 1, 100, 100, 100, 100])
     
     K_options = Vector{Matrix{Float64}}(undef, count_mapped_rotations)
 
     for i in eachindex(ship)
-        K_options[i] = lqr(ship[i].A, ship[i].B, 2*I, 2*I)
+        K_options[i] = lqr(ship[i].A, ship[i].B, Q, 2*I)
     end
 
     state = copy(target)
