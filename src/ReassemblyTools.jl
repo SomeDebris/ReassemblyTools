@@ -167,7 +167,7 @@ function computeshipstats(ship_filename, blocks, shapes)
 
             shape = getkeydefaulted(blocks[id], "shape", "SQUARE")
             scale = getkeydefaulted(blocks[id], "scale", 1)
-            density = getkeydefaulted(blocks[id], "density", 1)
+            density = getkeydefaulted(blocks[id], "density", 0.1)
             J = shapes[shape][scale]["J"][3]
 
             area = shapes[shape][scale]["area"]
@@ -200,7 +200,7 @@ function getshipstatespace(ship_stats::ShipInfo, blocks, shapes)
          0 0 -0.2 0 0 0
          0 0 0 -0.2 0 0
          0 0 0 0 0 1
-         0 0 0 0 0 0]
+         0 0 0 0 0 -0.2]
 
     thruster_count = lastindex(ship_stats.thrusters)
 
@@ -253,7 +253,7 @@ function getshipstatespace_fromfiles(ship_filename::AbstractString, blocks_filen
 end
 
 function simulate_ship_ss(ship::ShipStateSpace, target, range, deltat)
-    K = lqr(ship.A, ship.B, I, I)
+    K = lqr(ship.A, ship.B, 3*I, I)
 
     state = copy(target)
     states = Matrix{Float64}(undef, lastindex(target), lastindex(range))
